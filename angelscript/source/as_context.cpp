@@ -1832,7 +1832,7 @@ void asCContext::ExecuteNext()
 		{
 			asDWORD **a = (asDWORD**)*(size_t*)l_sp;
 			l_sp += PTR_SIZE;
-			if( a && *a )
+			if( false )
 			{
 				asCObjectType *objType = (asCObjectType*)(size_t)PTRARG(l_bc);
 				asSTypeBehaviour *beh = &objType->beh;

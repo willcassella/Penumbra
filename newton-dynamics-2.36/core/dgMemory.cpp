@@ -19,6 +19,8 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
+#include <stdlib.h>
+
 #include "dgStdafx.h"
 #include "dgList.h"
 #include "dgDebug.h"
@@ -159,147 +161,149 @@ void dgMemoryAllocator::FreeLow (void* const retPtr)
 // if memory size is larger than DG_MEMORY_BIN_ENTRIES then the memory is not placed into a pool
 void *dgMemoryAllocator::Malloc(dgInt32 memsize)
 {
-	_ASSERTE (dgInt32 (sizeof (dgMemoryCacheEntry) + sizeof (dgInt32) + sizeof(dgInt32)) <= DG_MEMORY_GRANULARITY);
+    return malloc(memsize);
+	/* _ASSERTE (dgInt32 (sizeof (dgMemoryCacheEntry) + sizeof (dgInt32) + sizeof(dgInt32)) <= DG_MEMORY_GRANULARITY); */
 
-  dgInt32 size = memsize + DG_MEMORY_GRANULARITY - 1;
-  size &= (-DG_MEMORY_GRANULARITY);
+  /* dgInt32 size = memsize + DG_MEMORY_GRANULARITY - 1; */
+  /* size &= (-DG_MEMORY_GRANULARITY); */
 
-  dgInt32 paddedSize = size + DG_MEMORY_GRANULARITY;
-  dgInt32 entry = paddedSize >> DG_MEMORY_GRANULARITY_BITS;
+  /* dgInt32 paddedSize = size + DG_MEMORY_GRANULARITY; */
+  /* dgInt32 entry = paddedSize >> DG_MEMORY_GRANULARITY_BITS; */
 
-  void* ptr;
-	if (entry >= DG_MEMORY_BIN_ENTRIES) {
-    ptr = MallocLow(size);
-	} else {
-		if (!m_memoryDirectory[entry].m_cache) {
-      dgMemoryBin* const bin = (dgMemoryBin*) MallocLow(sizeof(dgMemoryBin));
+  /* void* ptr; */
+	/* if (entry >= DG_MEMORY_BIN_ENTRIES) { */
+    /* ptr = MallocLow(size); */
+	/* } else { */
+	/* 	if (!m_memoryDirectory[entry].m_cache) { */
+      /* dgMemoryBin* const bin = (dgMemoryBin*) MallocLow(sizeof(dgMemoryBin)); */
 
-      dgInt32 count = dgInt32(sizeof(bin->m_pool) / paddedSize);
-      bin->m_info.m_count = 0;
-      bin->m_info.m_totalCount = count;
-      bin->m_info.m_stepInBites = paddedSize;
-      bin->m_info.m_next = m_memoryDirectory[entry].m_first;
-      bin->m_info.m_prev = NULL;
-			if (bin->m_info.m_next) {
-        bin->m_info.m_next->m_info.m_prev = bin;
-      }
+      /* dgInt32 count = dgInt32(sizeof(bin->m_pool) / paddedSize); */
+      /* bin->m_info.m_count = 0; */
+      /* bin->m_info.m_totalCount = count; */
+      /* bin->m_info.m_stepInBites = paddedSize; */
+      /* bin->m_info.m_next = m_memoryDirectory[entry].m_first; */
+      /* bin->m_info.m_prev = NULL; */
+	/* 		if (bin->m_info.m_next) { */
+        /* bin->m_info.m_next->m_info.m_prev = bin; */
+      /* } */
 
-      m_memoryDirectory[entry].m_first = bin;
+      /* m_memoryDirectory[entry].m_first = bin; */
 
-      char* charPtr = bin->m_pool;
-      m_memoryDirectory[entry].m_cache = (dgMemoryCacheEntry*) charPtr;
+      /* char* charPtr = bin->m_pool; */
+      /* m_memoryDirectory[entry].m_cache = (dgMemoryCacheEntry*) charPtr; */
 
-//			charPtr = bin->m_pool
-			for (dgInt32 i = 0; i < count; i ++) {
-        dgMemoryCacheEntry* const cashe = (dgMemoryCacheEntry*) charPtr;
-        cashe->m_next = (dgMemoryCacheEntry*) (charPtr + paddedSize);
-        cashe->m_prev = (dgMemoryCacheEntry*) (charPtr - paddedSize);
-				dgMemoryInfo* const info = ((dgMemoryInfo*) (charPtr + DG_MEMORY_GRANULARITY)) - 1;						
-        info->SaveInfo(this, bin, entry, m_emumerator, memsize);
-        charPtr += paddedSize;
-      }
-			dgMemoryCacheEntry* const cashe = (dgMemoryCacheEntry*) (charPtr - paddedSize);
-      cashe->m_next = NULL;
-      m_memoryDirectory[entry].m_cache->m_prev = NULL;
-    }
+/* //			charPtr = bin->m_pool */
+	/* 		for (dgInt32 i = 0; i < count; i ++) { */
+        /* dgMemoryCacheEntry* const cashe = (dgMemoryCacheEntry*) charPtr; */
+        /* cashe->m_next = (dgMemoryCacheEntry*) (charPtr + paddedSize); */
+        /* cashe->m_prev = (dgMemoryCacheEntry*) (charPtr - paddedSize); */
+	/* 			dgMemoryInfo* const info = ((dgMemoryInfo*) (charPtr + DG_MEMORY_GRANULARITY)) - 1; */						
+        /* info->SaveInfo(this, bin, entry, m_emumerator, memsize); */
+        /* charPtr += paddedSize; */
+      /* } */
+	/* 		dgMemoryCacheEntry* const cashe = (dgMemoryCacheEntry*) (charPtr - paddedSize); */
+      /* cashe->m_next = NULL; */
+      /* m_memoryDirectory[entry].m_cache->m_prev = NULL; */
+    /* } */
 
 
-    _ASSERTE(m_memoryDirectory[entry].m_cache);
+    /* _ASSERTE(m_memoryDirectory[entry].m_cache); */
 
-    dgMemoryCacheEntry* const cashe = m_memoryDirectory[entry].m_cache;
-    m_memoryDirectory[entry].m_cache = cashe->m_next;
-		if (cashe->m_next) {
-      cashe->m_next->m_prev = NULL;
-    }
+    /* dgMemoryCacheEntry* const cashe = m_memoryDirectory[entry].m_cache; */
+    /* m_memoryDirectory[entry].m_cache = cashe->m_next; */
+	/* 	if (cashe->m_next) { */
+      /* cashe->m_next->m_prev = NULL; */
+    /* } */
 
-    ptr = ((char*) cashe) + DG_MEMORY_GRANULARITY;
+    /* ptr = ((char*) cashe) + DG_MEMORY_GRANULARITY; */
 
-    dgMemoryInfo* info;
-    info = ((dgMemoryInfo*) (ptr)) - 1;
-    _ASSERTE(info->m_allocator == this);
+    /* dgMemoryInfo* info; */
+    /* info = ((dgMemoryInfo*) (ptr)) - 1; */
+    /* _ASSERTE(info->m_allocator == this); */
 
-    dgMemoryBin* const bin = (dgMemoryBin*) info->m_ptr;
-    bin->m_info.m_count++;
+    /* dgMemoryBin* const bin = (dgMemoryBin*) info->m_ptr; */
+    /* bin->m_info.m_count++; */
 
-#ifdef __TRACK_MEMORY_LEAKS__
-    m_leaklTracker.InsertBlock (dgInt32 (memsize), ptr);
-#endif
+/* #ifdef __TRACK_MEMORY_LEAKS__ */
+    /* m_leaklTracker.InsertBlock (dgInt32 (memsize), ptr); */
+/* #endif */
 
-  }
-  return ptr;
+  /* } */
+  /* return ptr; */
 }
 
 // alloca memory on pool that are quantized to DG_MEMORY_GRANULARITY
 // if memory size is larger than DG_MEMORY_BIN_ENTRIES then the memory is not placed into a pool
 void dgMemoryAllocator::Free (void* const retPtr)
 {
-  dgMemoryInfo* const info = ((dgMemoryInfo*) (retPtr)) - 1;
-  _ASSERTE(info->m_allocator == this);
+  free(retPtr);
+  /* dgMemoryInfo* const info = ((dgMemoryInfo*) (retPtr)) - 1; */
+  /* _ASSERTE(info->m_allocator == this); */
 
-  dgInt32 entry = info->m_size;
+  /* dgInt32 entry = info->m_size; */
 
-	if (entry >= DG_MEMORY_BIN_ENTRIES) {
-    FreeLow(retPtr);
-	} else {
-#ifdef __TRACK_MEMORY_LEAKS__
-    m_leaklTracker.RemoveBlock (retPtr);
-#endif
+	/* if (entry >= DG_MEMORY_BIN_ENTRIES) { */
+  /*   FreeLow(retPtr); */
+	/* } else { */
+/* #ifdef __TRACK_MEMORY_LEAKS__ */
+  /*   m_leaklTracker.RemoveBlock (retPtr); */
+/* #endif */
 
-		dgMemoryCacheEntry* const cashe = (dgMemoryCacheEntry*) (((char*)retPtr) - DG_MEMORY_GRANULARITY) ;
+		/* dgMemoryCacheEntry* const cashe = (dgMemoryCacheEntry*) (((char*)retPtr) - DG_MEMORY_GRANULARITY) ; */
 
-    dgMemoryCacheEntry* const tmpCashe = m_memoryDirectory[entry].m_cache;
-		if (tmpCashe) {
-      _ASSERTE(!tmpCashe->m_prev);
-      tmpCashe->m_prev = cashe;
-    }
-    cashe->m_next = tmpCashe;
-    cashe->m_prev = NULL;
+  /*   dgMemoryCacheEntry* const tmpCashe = m_memoryDirectory[entry].m_cache; */
+		/* if (tmpCashe) { */
+  /*     _ASSERTE(!tmpCashe->m_prev); */
+  /*     tmpCashe->m_prev = cashe; */
+  /*   } */
+  /*   cashe->m_next = tmpCashe; */
+  /*   cashe->m_prev = NULL; */
 
-    m_memoryDirectory[entry].m_cache = cashe;
+  /*   m_memoryDirectory[entry].m_cache = cashe; */
 
-    dgMemoryBin* const bin = (dgMemoryBin *) info->m_ptr;
+  /*   dgMemoryBin* const bin = (dgMemoryBin *) info->m_ptr; */
 
-#ifdef _DEBUG
-    _ASSERTE((bin->m_info.m_stepInBites - DG_MEMORY_GRANULARITY) > 0);
-    memset(retPtr, 0, bin->m_info.m_stepInBites - DG_MEMORY_GRANULARITY);
-#endif
+/* #ifdef _DEBUG */
+  /*   _ASSERTE((bin->m_info.m_stepInBites - DG_MEMORY_GRANULARITY) > 0); */
+  /*   memset(retPtr, 0, bin->m_info.m_stepInBites - DG_MEMORY_GRANULARITY); */
+/* #endif */
 
-    bin->m_info.m_count--;
-		if (bin->m_info.m_count == 0) {
+  /*   bin->m_info.m_count--; */
+		/* if (bin->m_info.m_count == 0) { */
 
-      dgInt32 count = bin->m_info.m_totalCount;
-      dgInt32 sizeInBytes = bin->m_info.m_stepInBites;
-      char* charPtr = bin->m_pool;
-			for (dgInt32 i = 0; i < count; i ++) {
-        dgMemoryCacheEntry* const tmpCashe = (dgMemoryCacheEntry*) charPtr;
-        charPtr += sizeInBytes;
+  /*     dgInt32 count = bin->m_info.m_totalCount; */
+  /*     dgInt32 sizeInBytes = bin->m_info.m_stepInBites; */
+  /*     char* charPtr = bin->m_pool; */
+			/* for (dgInt32 i = 0; i < count; i ++) { */
+  /*       dgMemoryCacheEntry* const tmpCashe = (dgMemoryCacheEntry*) charPtr; */
+  /*       charPtr += sizeInBytes; */
 
-				if (tmpCashe == m_memoryDirectory[entry].m_cache) {
-          m_memoryDirectory[entry].m_cache = tmpCashe->m_next;
-        }
+				/* if (tmpCashe == m_memoryDirectory[entry].m_cache) { */
+  /*         m_memoryDirectory[entry].m_cache = tmpCashe->m_next; */
+  /*       } */
 
-				if (tmpCashe->m_prev) {
-          tmpCashe->m_prev->m_next = tmpCashe->m_next;
-        }
+				/* if (tmpCashe->m_prev) { */
+  /*         tmpCashe->m_prev->m_next = tmpCashe->m_next; */
+  /*       } */
 
-				if (tmpCashe->m_next) {
-          tmpCashe->m_next->m_prev = tmpCashe->m_prev;
-        }
-      }
+				/* if (tmpCashe->m_next) { */
+  /*         tmpCashe->m_next->m_prev = tmpCashe->m_prev; */
+  /*       } */
+  /*     } */
 
-			if (m_memoryDirectory[entry].m_first == bin) {
-        m_memoryDirectory[entry].m_first = bin->m_info.m_next;
-      }
-			if (bin->m_info.m_next) {
-        bin->m_info.m_next->m_info.m_prev = bin->m_info.m_prev;
-      }
-			if (bin->m_info.m_prev) {
-        bin->m_info.m_prev->m_info.m_next = bin->m_info.m_next;
-      }
+			/* if (m_memoryDirectory[entry].m_first == bin) { */
+  /*       m_memoryDirectory[entry].m_first = bin->m_info.m_next; */
+  /*     } */
+			/* if (bin->m_info.m_next) { */
+  /*       bin->m_info.m_next->m_info.m_prev = bin->m_info.m_prev; */
+  /*     } */
+			/* if (bin->m_info.m_prev) { */
+  /*       bin->m_info.m_prev->m_info.m_next = bin->m_info.m_next; */
+  /*     } */
 
-      FreeLow(bin);
-    }
-  }
+  /*     FreeLow(bin); */
+  /*   } */
+  /* } */
 }
 
 
