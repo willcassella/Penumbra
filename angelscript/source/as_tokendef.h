@@ -273,7 +273,7 @@ sTokenWord const tokenWords[] =
 
 const asUINT numTokenWords = sizeof(tokenWords)/sizeof(sTokenWord);
 
-const char * const whiteSpace = " \t\r\n";
+const char whiteSpace[] = " \t\r\n";
 
 // Some keywords that are not considered tokens by the parser
 const char * const THIS_TOKEN = "this";
