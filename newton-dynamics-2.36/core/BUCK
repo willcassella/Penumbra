@@ -1,5 +1,6 @@
 cxx_library(
     name = "core",
+    visibility = ["//newton-dynamics-2.36/..."],
     header_namespace = "",
     exported_headers = [
         "dg.h",
@@ -74,8 +75,6 @@ cxx_library(
     exported_preprocessor_flags = [
         "-D_SCALAR_ARITHMETIC_ONLY",
     ],
-    visibility = [
-        "//newton-dynamics-2.36/...",
-    ],
+    link_style = "static",
 )
 

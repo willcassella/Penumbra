@@ -1,5 +1,6 @@
 cxx_library(
     name = "physics",
+    visibility = ["//newton-dynamics-2.36/..."],
     header_namespace = "",
     exported_headers = [
         "dgBallConstraint.h",
@@ -91,8 +92,6 @@ cxx_library(
     exported_deps = [
         "//newton-dynamics-2.36/core:core",
     ],
-    visibility = [
-        "//newton-dynamics-2.36/...",
-    ],
+    link_style = "static",
 )
 

@@ -1,5 +1,6 @@
 cxx_library(
     name = "newton",
+    visibility = ["PUBLIC"],
     header_namespace = "",
     exported_headers = [
         "Newton.h",
@@ -16,7 +17,5 @@ cxx_library(
         "//newton-dynamics-2.36/physics:physics",
         "//newton-dynamics-2.36/core:core",
     ],
-    visibility = [
-        "PUBLIC",
-    ],
+    link_style = "static",
 )

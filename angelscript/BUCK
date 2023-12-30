@@ -1,5 +1,6 @@
 cxx_library(
     name = "angelscript",
+    visibility = ["PUBLIC"],
     headers = [
         "source/as_anyobject.h",
         "source/as_array.h",
@@ -74,5 +75,5 @@ cxx_library(
     exported_deps = [
         "//angelscript/include:headers",
     ],
-    visibility = ["PUBLIC"],
+    link_style = "static",
 )

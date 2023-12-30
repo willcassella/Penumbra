@@ -1,8 +1,9 @@
 cxx_library(
     name = "headers",
+    visibility = ["PUBLIC"],
     header_namespace = "",
     exported_headers = [
         "angelscript.h",
     ],
-    visibility = ["PUBLIC"],
+    link_style = "static",
 )
