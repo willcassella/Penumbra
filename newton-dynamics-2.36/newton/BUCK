@@ -1,0 +1,22 @@
+cxx_library(
+    name = "newton",
+    header_namespace = "",
+    exported_headers = [
+        "Newton.h",
+    ],
+    headers = [
+        "NewtonStdAfx.h",
+        "NewtonClass.h",
+    ],
+    srcs = [
+        "Newton.cpp",
+        "NewtonClass.cpp",
+    ],
+    deps = [
+        "//newton-dynamics-2.36/physics:physics",
+        "//newton-dynamics-2.36/core:core",
+    ],
+    visibility = [
+        "PUBLIC",
+    ],
+)

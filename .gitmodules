@@ -1,0 +1,12 @@
+[submodule "PenumbraOverture"]
+	path = PenumbraOverture
+	url = git@github.com:willcassella/PenumbraOverture.git
+[submodule "prelude"]
+	path = prelude
+	url = https://github.com/facebook/buck2-prelude.git
+[submodule "OALWrapper"]
+	path = OALWrapper
+	url = git@github.com:willcassella/OALWrapper.git
+[submodule "HPL1Engine"]
+	path = HPL1Engine
+	url = git@github.com:willcassella/HPL1Engine.git
