@@ -1,3 +1,6 @@
+load("//defs.bzl", "global_compiler_flags")
+load("//defs.bzl", "global_linker_flags")
+
 cxx_library(
     name = "physics",
     visibility = ["//newton-dynamics-2.36/..."],
@@ -92,6 +95,8 @@ cxx_library(
     exported_deps = [
         "//newton-dynamics-2.36/core:core",
     ],
+    compiler_flags = global_compiler_flags,
+    linker_flags = global_linker_flags,
     link_style = "static",
 )
 

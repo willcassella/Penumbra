@@ -1,3 +1,6 @@
+load("//defs.bzl", "global_compiler_flags")
+load("//defs.bzl", "global_linker_flags")
+
 cxx_library(
     name = "angelscript",
     visibility = ["PUBLIC"],
@@ -75,5 +78,10 @@ cxx_library(
     exported_deps = [
         "//angelscript/include:headers",
     ],
+    exported_preprocessor_flags = [
+        "-DAS_MAX_PORTABILITY",
+    ],
+    compiler_flags = global_compiler_flags,
+    linker_flags = global_linker_flags,
     link_style = "static",
 )
