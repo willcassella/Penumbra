@@ -200,6 +200,7 @@ dgCpuClass dgApi dgGetCpuType ()
 #else
 /*	#define cpuid(func,ax,bx,cx,dx)	__asm__ __volatile__ ("cpuid": "=a" (ax), "=b" (bx), "=c" (cx), "=d" (dx) : "a" (func)); */
 
+#if !defined(__USE_DOUBLE_PRECISION__) && !defined(_SCALAR_ARITHMETIC_ONLY)
 void cpuid(dgUnsigned32 op, dgUnsigned32 reg[4])
 {
   asm volatile(
@@ -232,6 +233,7 @@ static dgInt32 cpuid(void)
   cpuid(1, reg);
   return reg[3];
 }
+#endif
 
 dgCpuClass dgApi dgGetCpuType()
 {
@@ -239,7 +241,7 @@ dgCpuClass dgApi dgGetCpuType()
 #define bit_SSE (1 << 25)
 #define bit_SSE2 (1 << 26)
 
-#ifndef __USE_DOUBLE_PRECISION__
+#if !defined(__USE_DOUBLE_PRECISION__) && !defined(_SCALAR_ARITHMETIC_ONLY)
   if (cpuid() & bit_SSE)
   {
     return dgSimdPresent;
