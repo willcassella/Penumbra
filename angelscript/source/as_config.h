@@ -433,9 +433,10 @@
     #endif
 #endif
 
-
-
-
+// Just blank-define STDCALL for any other platform.
+#if !defined(STDCALL)
+#define STDCALL
+#endif
 
 //
 // Internal defines (do not change these)

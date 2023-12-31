@@ -776,7 +776,7 @@ template <int N>
 struct asSMethodPtr
 {
 	template<class M>
-	static asUPtr Convert(M Mthd) = delete;
+	static asUPtr Convert(M Mthd);
 };
 
 // Template specialization
