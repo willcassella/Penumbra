@@ -1,5 +1,5 @@
 global_compiler_flags = [
-    "-std=c++03",
+    "-std=c++11",
     "-g",
     "-fsanitize=address",
 ]
